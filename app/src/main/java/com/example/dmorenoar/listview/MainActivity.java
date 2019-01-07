@@ -3,8 +3,10 @@ package com.example.dmorenoar.listview;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -47,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //Enlazamos con nuestro adaptador personalizado el listView creado en el layout
+
+        MyAdapter myAdapter = new MyAdapter(this, R.layout.detail_user, names);
+        listView.setAdapter(myAdapter);
 
     }
 }
+
