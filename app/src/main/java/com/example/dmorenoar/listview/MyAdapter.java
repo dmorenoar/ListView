@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class MyAdapter extends BaseAdapter {
@@ -45,21 +47,41 @@ public class MyAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View view = convertView;
+        /*ViewHolder Pattern nos permite aumentar el rendimiento de la aplicación para que no se
+        dupliquen las llamadas al finViewById en las celdas ya instanciadas*/
+        ViewHolder holder;
 
-        /*Recogemos el view de la vista, lo inflamos y lo personalizamos*/
+        /*Comprobamos si la row ya ha sido renderizada y directamente asignamos al holder el convertView sin
+        * tener que volver a hacer el findById*/
+        if (convertView == null){
+            /*Recogemos el view de la vista, lo inflamos y lo personalizamos*/
+            //Personalizamos el layout donde vamos a mostrar al clickar la celda
+            LayoutInflater layoutInflater = LayoutInflater.from(this.context);
+            convertView = layoutInflater.inflate(R.layout.detail_user, null);
 
-        //Personalizamos el layout donde vamos a mostrar al clickar la celda
-        LayoutInflater layoutInflater = LayoutInflater.from(this.context);
-        view = layoutInflater.inflate(R.layout.detail_user, null);
+            holder = new ViewHolder();
+
+            //Recuperamos de la vista que si puede contener el contexto el id del textview donde mostraremos el nombre
+            //Añadimos en la propiedad la referencia del textview que vamos a referenciar
+            holder.nameTextView = (TextView) convertView.findViewById(R.id.textView);
+            convertView.setTag(holder);
+
+        }else{
+            holder = (ViewHolder) convertView.getTag();
+        }
+
 
         //Casteamos porque recibimos un object de la posición clicada
         String currentName = (String) listNames.get(position);
 
-        //Recuperamos de la vista que si puede contener el contexto el id del textview donde mostraremos el nombre
-        TextView textView = (TextView) view.findViewById(R.id.textView);
-        textView.setText(currentName);
 
-        return view;
+        holder.nameTextView.setText(currentName);
+
+        return convertView;
+    }
+
+    static class ViewHolder {
+        /*Creariamos tantas variables como elementos tengamos en nuestra layout personalizada*/
+        private TextView nameTextView;
     }
 }
